@@ -14,8 +14,8 @@ public class Frame extends JFrame {
         menuBar = new JMenuBar();
         JMenu menu = new JMenu("File");
         JMenuItem exit = new JMenuItem("Exit");
-        JMenuItem open = new JMenuItem("Exit");
-        JMenuItem save = new JMenuItem("Exit");
+        JMenuItem open = new JMenuItem("Open");
+        JMenuItem save = new JMenuItem("Save");
 
         save.addActionListener(new ActionListener() {
             @Override
@@ -37,13 +37,18 @@ public class Frame extends JFrame {
             }
         });
 
-        menu.add(open);
+
         menu.add(save);
+        menu.add(open);
         menu.add(exit);
 
         menuBar.add(menu);
         this.setJMenuBar(menuBar);
 
+        this.manager = new PanelManager(title);
+        this.add(manager);
+
+        this.setVisible(true);
 
     }
 
@@ -68,5 +73,48 @@ public class Frame extends JFrame {
                 JOptionPane.showMessageDialog(this, "Error opening the file: " + x.getMessage());
             }
         }
+    }
+    private void savingTheFile(ActionEvent ok){
+        JFileChooser FileList = new JFileChooser();
+        FileList.setDialogTitle("Save any file");
+
+        int returnTheValue = FileList.showSaveDialog(this);
+        if(returnTheValue == JFileChooser.APPROVE_OPTION){
+            File theSelectedFile = FileList.getSelectedFile();
+            if(theSelectedFile != null){
+                String path = theSelectedFile.getAbsolutePath();
+
+                // Now check if the file exists
+                if(theSelectedFile.exists()){
+                    int reply = JOptionPane.showConfirmDialog(this,
+                            "You already have a file named like this, would you like to replace it?",
+                            "Yes", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if(reply != JOptionPane.YES_OPTION){
+                        return; // User chose no
+                    }
+                }
+
+                try(BufferedWriter typewriter = new BufferedWriter(new FileWriter(theSelectedFile))){
+                    JTextArea txt = manager.getCurrentTextArea();
+                    String words = txt.getText();
+                    typewriter.write(words);
+                    JOptionPane.showMessageDialog(this, "The file was saved!" + path);
+                } catch (IOException e){
+                    JOptionPane.showMessageDialog(this, "Error with saving this file" + e.getMessage());
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "No file has been selected, please select a file");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Save was cancelled");
+        }
+    }
+
+    @Override
+    public String getTitle(){
+        return title;
+    }
+    public void setTitle(String title){
+        this.title = title;
     }
 }
