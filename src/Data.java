@@ -1,22 +1,31 @@
 import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 
-public class Data {
-    public static void openFile(JFrame parent) {
+public class Data extends Component {
+
+    public static void openFile(JFrame parent, PanelManager manager) {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Open a file");
-        StringBuilder content = new StringBuilder();
 
         int ret = chooser.showOpenDialog(parent);
-        if (ret == JFileChooser.APPROVE_OPTION) {
+        if(ret == JFileChooser.APPROVE_OPTION){
             File selected = chooser.getSelectedFile();
-            try (BufferedReader reader = new BufferedReader(new FileReader(selected))) {
+            System.out.println(selected);
+            try(BufferedReader reader = new BufferedReader(new FileReader(selected))){
+                StringBuilder content = new StringBuilder();
                 String line;
-                while ((line = reader.readLine()) != null) {
+                while((line = reader.readLine())!= null){
+                    System.out.println(line);
                     content.append(line);
                 }
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(parent, "Error opening file: " + e.getMessage());
+                JTextArea txt = manager.getCurrentTextArea();
+                if(txt != null){
+                    txt.setText(content.toString());
+                    System.out.println(txt);
+                }
+            } catch (IOException x){
+                JOptionPane.showMessageDialog(parent, "Error opening the file: " + x.getMessage());
             }
         }
 

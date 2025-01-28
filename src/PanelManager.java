@@ -2,7 +2,8 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-// I have extended the jpanel class.
+
+// I have extended the JPanel class in order to be able to use all of it's methods.
 public class PanelManager extends JPanel{
     //private attributes.
         private String title;
@@ -19,43 +20,66 @@ public class PanelManager extends JPanel{
             this.setBackground(new Color(255, 255, 192));
             this.setLayout(new BorderLayout());
 
-            ColourPnl = new JPanel();
+            ColourPnl = new JPanel(new CardLayout());
             tab = new JTabbedPane(JTabbedPane.TOP);
             btn = new JButton("Add tab");
             ColourPnl = new JPanel();
             ColourPnl.setLayout(new GridLayout(2, 2));
+
+
+            // Creating the buttons
             redBtn = new JButton();
             blueBtn = new JButton();
             greenBtn = new JButton();
+
+
+            // Adding the buttons to the Colour Panel (ColourPnl)
             ColourPnl.add(redBtn);
             ColourPnl.add(greenBtn);
             ColourPnl.add(blueBtn);
             VocabularyPnl = new JPanel();
 
-            // I have added the vocabulary aid by having a text area inside another panel for a more organised layout.
-            txtArea = new JTextArea();
-            vocab = new JTextArea("Vocabulary Aid");
-            JScrollPane scroll = new JScrollPane(txtArea);
-            tab.addTab("Page 1", scroll);
-            VocabularyPnl.add(vocab);
+            btn.setBackground(new Color(255, 255, 192));
 
-            this.add(ColourPnl, BorderLayout.NORTH);
+            txtArea = new JTextArea();
+            txtArea.setBackground(new Color(255, 255, 192));
+            // Vocabulary Helper being set up
+            vocab = new JTextArea("Vocabulary Aid");
+            VocabularyPnl.add(vocab);
+            VocabularyPnl.setBackground(new Color(255, 255, 192));
+            vocab.setBackground(new Color(255, 255, 192));
+
+
+            JScrollPane scroll = new JScrollPane(txtArea);
+            scroll.setBackground(new Color(255, 255, 192));
+            tab.addTab("Page 1", scroll);
+            tab.setBackground(new Color(255, 255, 192));
+
+//            this.add(ColourPnl);
+            ColourPnl.setBackground(new Color(255, 255, 192));
             this.add(tab, BorderLayout.CENTER);
             this.add(btn, BorderLayout.PAGE_END);
             this.add(VocabularyPnl, BorderLayout.NORTH);
 
-            setup_Colour();
+            ColourPnl.setLocation(50, 100);
+
+            setupColours();
             setup_Add();
 
             changeTextColour(Color.BLACK);
+
+            txtArea.setCaretColor(new Color(255, 255, 192));
         }
 
+
+        /*
         private void setup_Colour(){
             redBtn.addActionListener(e -> changeTextColour(Color.RED));
             greenBtn.addActionListener(e -> changeTextColour(Color.GREEN));
             blueBtn.addActionListener(e -> changeTextColour(Color.BLUE));
             setupColours();
         }
+        */
         private void changeTextColour(Color color){
             Component selected = tab.getSelectedComponent();
             if(selected instanceof JScrollPane){

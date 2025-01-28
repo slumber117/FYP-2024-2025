@@ -27,7 +27,7 @@ public class Frame extends JFrame {
         open.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                openFile(e);
+                Data.openFile(Frame.this, manager);
             }
         });
         exit.addActionListener(new ActionListener() {

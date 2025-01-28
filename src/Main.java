@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -8,6 +9,7 @@ public class Main {
         // to see how IntelliJ IDEA suggests fixing it.
         SwingUtilities.invokeLater(() -> {
             Frame fr = new Frame("New Page");
+
             fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             fr.setVisible(true);
         });
