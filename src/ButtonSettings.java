@@ -28,12 +28,8 @@ public class ButtonSettings extends JToggleButton {
             g.setColor(yellow);
         }
 
-
         g.fillRoundRect(0, 0, getWidth(), getHeight(), radius, radius);
-
-
         g.setColor(getForeground());
-
 
         FontMetrics fm = g.getFontMetrics();
         int x = (getWidth() - fm.stringWidth(getText())) / 2;
@@ -47,7 +43,6 @@ public class ButtonSettings extends JToggleButton {
 
         g.drawRoundRect(0, 0, getWidth() - 1 - borderSize, getHeight() - 1 - borderSize, radius, radius);
     }
-
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(150, 40);

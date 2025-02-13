@@ -5,17 +5,16 @@ import javax.swing.text.StyledDocument;
 import java.awt.*;
 
 public class PanelManager extends JPanel {
-    // Private attributes
+    
     private String title;
     private JTabbedPane tab;
-    private JButton addTabButton;
-    private JButton prevButton;
-    private JButton nextButton;
+    private JButton addTab;
+    private JButton prev, next;
     private ButtonSettings redBtn, blueBtn, greenBtn, yellowBtn;
     private JPanel ColourPnl, VocabularyPnl;
     private JTextPane txtArea, vocab;
-    private JComboBox<Integer> dropMenu;
-    private JComboBox<String> fontTypeMenu;
+    private JComboBox<Integer> fontSize;
+    private JComboBox<String> fontFam;
 
     public PanelManager(String title) {
         this.title = title;
@@ -24,18 +23,18 @@ public class PanelManager extends JPanel {
 
         // Settings for the drop-down menu for font size
         Integer[] FontSize = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 24, 26, 30};
-        dropMenu = new JComboBox<>(FontSize);
-        dropMenu.setSelectedIndex(15);
+        fontSize = new JComboBox<>(FontSize);
+        fontSize.setSelectedIndex(15);
 
         // Create the font type combo box
         String[] fontNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-        fontTypeMenu = new JComboBox<>(fontNames);
-        fontTypeMenu.setSelectedItem("Arial"); // Set default font
+        fontFam = new JComboBox<>(fontNames);
+        fontFam.setSelectedItem("Arial"); // Set default font
 
         // Makes drop down menu work.
-        fontTypeMenu.addActionListener(e -> {
-            String selectedFont = (String) fontTypeMenu.getSelectedItem();
-            updateFontType(selectedFont);
+        fontFam.addActionListener(e -> {
+            String selectedFont = (String) fontFam.getSelectedItem();
+            changeFontFam(selectedFont);
         });
 
         // Settings for JTextPane.
@@ -45,9 +44,9 @@ public class PanelManager extends JPanel {
         txtArea.setBackground(new Color(255, 255, 192));
 
         // Makes drop down menu work again.
-        dropMenu.addActionListener(e -> {
-            Integer selectedSize = (Integer) dropMenu.getSelectedItem();
-            updateFontSize(selectedSize);
+        fontSize.addActionListener(e -> {
+            Integer selectedSize = (Integer) fontSize.getSelectedItem();
+            changeFontSize(selectedSize);
         });
 
         ColourPnl = new JPanel(new GridLayout(2, 2));
@@ -89,11 +88,11 @@ public class PanelManager extends JPanel {
 
         gbcButton.gridx = 0;
         gbcButton.gridy = 0;
-        buttonPanel.add(dropMenu, gbcButton);
+        buttonPanel.add(fontSize, gbcButton);
 
         // Font family positioning.
         gbcButton.gridx = 1; // Second column
-        buttonPanel.add(fontTypeMenu, gbcButton);
+        buttonPanel.add(fontFam, gbcButton);
 
         // Toggle settings for embolding.
         ButtonSettings boldToggleBtn = new ButtonSettings("Bold", 15, Color.LIGHT_GRAY, Color.LIGHT_GRAY, 2);
@@ -147,19 +146,19 @@ public class PanelManager extends JPanel {
         this.add(tab, BorderLayout.CENTER);
 
         // Button navigation.
-        prevButton = new JButton("Previous");
-        nextButton = new JButton("Next");
-        addTabButton = new JButton("Add Tab");
+        prev = new JButton("Previous");
+        next = new JButton("Next");
+        addTab = new JButton("Add Tab");
 
         // Previous and Next button settings.
-        prevButton.addActionListener(e -> {
+        prev.addActionListener(e -> {
             int selectedIndex = tab.getSelectedIndex();
             if (selectedIndex > 0) {
                 tab.setSelectedIndex(selectedIndex - 1);
             }
         });
 
-        nextButton.addActionListener(e -> {
+        next.addActionListener(e -> {
             int selectedIndex = tab.getSelectedIndex();
             if (selectedIndex < tab.getTabCount() - 1) {
                 tab.setSelectedIndex(selectedIndex + 1);
@@ -169,9 +168,9 @@ public class PanelManager extends JPanel {
         // Navigation panel settings.
         JPanel navPanel = new JPanel();
         navPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        navPanel.add(prevButton);
-        navPanel.add(addTabButton);
-        navPanel.add(nextButton);
+        navPanel.add(prev);
+        navPanel.add(addTab);
+        navPanel.add(next);
 
         // Add the navigation panel to the bottom of the main panel
         this.add(navPanel, BorderLayout.SOUTH);
@@ -189,7 +188,7 @@ public class PanelManager extends JPanel {
         txtArea.setCaretColor(new Color(255, 255, 192));
     }
 
-    private void updateFontSize(int size) {
+    private void changeFontSize(int size) {
         // Update the font size of the currently selected JTextPane
         JTextPane currentTextPane = getCurrentTextPane();
         if (currentTextPane != null) {
@@ -197,65 +196,6 @@ public class PanelManager extends JPanel {
         }
     }
 
-    private void updateFontType(String fontName) {
-        // Update the font type of the currently selected JTextPane
-        JTextPane currentTextPane = getCurrentTextPane();
-        if (currentTextPane != null) {
-            currentTextPane.setFont(new Font(fontName, Font.PLAIN, currentTextPane.getFont().getSize()));
-        }
-    }
-
-    private void changeColour(JToggleButton tog) {
-        JTextPane currentTextPane = getCurrentTextPane();
-        if (currentTextPane != null) {
-            if (tog.isSelected()) {
-                currentTextPane.setBackground(new Color(73, 129, 253)); // Light blue
-            } else {
-                currentTextPane.setBackground(new Color(255, 255, 192)); // Default background
-            }
-        }
-    }
-
-    private void changeTextColour(Color colour) {
-        Component selected = tab.getSelectedComponent();
-        if (selected instanceof JScrollPane) {
-            JViewport view = ((JScrollPane) selected).getViewport();
-            if (view.getView() instanceof JTextPane) {
-                JTextPane current = (JTextPane) view.getView();
-                current.setForeground(colour);
-            }
-        }
-    }
-
-    private void makeSelectedTextBold() {
-        JTextPane currentTextPane = getCurrentTextPane();
-        if (currentTextPane != null) {
-            StyledDocument doc = currentTextPane.getStyledDocument();
-            int start = currentTextPane.getSelectionStart();
-            int end = currentTextPane.getSelectionEnd();
-
-            if (start != end) {
-                Style style = currentTextPane.addStyle("BoldStyle", null);
-                StyleConstants.setBold(style, true);
-                doc.setCharacterAttributes(start, end - start, style, false);
-            }
-        }
-    }
-
-    private void makeSelectedTextNormal() {
-        JTextPane currentTextPane = getCurrentTextPane();
-        if (currentTextPane != null) {
-            StyledDocument doc = currentTextPane.getStyledDocument();
-            int start = currentTextPane.getSelectionStart();
-            int end = currentTextPane.getSelectionEnd();
-
-            if (start != end) {
-                Style style = currentTextPane.addStyle("NormalStyle", null);
-                StyleConstants.setBold(style, false); // Set bold to false
-                doc.setCharacterAttributes(start, end - start, style, false);
-            }
-        }
-    }
 
     private void setupColours() {
         redBtn.setBackground(new Color(255, 0, 0));
@@ -271,6 +211,64 @@ public class PanelManager extends JPanel {
         yellowBtn.setForeground(Color.WHITE);
     }
 
+
+    private void changeColour(JToggleButton tog) {
+        JTextPane currentTextPane = getCurrentTextPane();
+        if (currentTextPane != null) {
+            if (tog.isSelected()) {
+                currentTextPane.setBackground(new Color(73, 129, 253));
+            } else {
+                currentTextPane.setBackground(new Color(255, 255, 192));
+            }
+        }
+    }
+    private void changeFontFam(String fontName) {
+        // Update the font type of the currently selected JTextPane
+        JTextPane currentTextPane = getCurrentTextPane();
+        if (currentTextPane != null) {
+            currentTextPane.setFont(new Font(fontName, Font.PLAIN, currentTextPane.getFont().getSize()));
+        }
+    }
+    private void changeTextColour(Color colour) {
+        Component selected = tab.getSelectedComponent();
+        if (selected instanceof JScrollPane) {
+            JViewport view = ((JScrollPane) selected).getViewport();
+            if (view.getView() instanceof JTextPane) {
+                JTextPane current = (JTextPane) view.getView();
+                current.setForeground(colour);
+            }
+        }
+    }
+    private void makeSelectedTextBold() {
+        JTextPane currentTextPane = getCurrentTextPane();
+        if (currentTextPane != null) {
+            StyledDocument doc = currentTextPane.getStyledDocument();
+            int start = currentTextPane.getSelectionStart();
+            int end = currentTextPane.getSelectionEnd();
+
+            if (start != end) {
+                Style style = currentTextPane.addStyle("BoldStyle", null);
+                StyleConstants.setBold(style, true);
+                doc.setCharacterAttributes(start, end - start, style, false);
+            }
+        }
+    }
+    private void makeSelectedTextNormal() {
+        JTextPane currentTextPane = getCurrentTextPane();
+        if (currentTextPane != null) {
+            StyledDocument doc = currentTextPane.getStyledDocument();
+            int start = currentTextPane.getSelectionStart();
+            int end = currentTextPane.getSelectionEnd();
+
+            if (start != end) {
+                Style style = currentTextPane.addStyle("NormalStyle", null);
+                StyleConstants.setBold(style, false);
+                doc.setCharacterAttributes(start, end - start, style, false);
+            }
+        }
+    }
+
+
     public JTextPane getCurrentTextPane() {
         Component selected = tab.getSelectedComponent();
         if (selected instanceof JScrollPane) {
@@ -283,8 +281,8 @@ public class PanelManager extends JPanel {
     }
 
     private void setup_Add() {
-        addTabButton.addActionListener(e -> {
-            Integer selectedSize = (Integer) dropMenu.getSelectedItem();
+        addTab.addActionListener(e -> {
+            Integer selectedSize = (Integer) fontSize.getSelectedItem();
             JTextPane txt = new JTextPane();
             txt.setText("New Page: " + (tab.getTabCount() + 1));
             txt.setFont(new Font("Arial", Font.PLAIN, selectedSize));

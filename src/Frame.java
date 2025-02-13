@@ -85,7 +85,7 @@ public class Frame extends JFrame {
                 document.open();
 
 
-                String content = manager.getCurrentTextPane().getText();// Add content to the PDF
+                String content = manager.getCurrentTextPane().getText();
 
                 document.close();
                 JOptionPane.showMessageDialog(this, "PDF saved successfully: " + fileToSave.getAbsolutePath());

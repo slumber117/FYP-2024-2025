@@ -3,7 +3,6 @@ import java.awt.*;
 import java.io.*;
 
 public class Data extends Component {
-
     public static void openFile(JFrame parent, PanelManager manager) {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Open a file");
@@ -28,7 +27,6 @@ public class Data extends Component {
                 JOptionPane.showMessageDialog(parent, "Error opening the file: " + x.getMessage());
             }
         }
-
     }
     public static void saveFile(JFrame parent, String content) {
         JFileChooser chooser = new JFileChooser();
