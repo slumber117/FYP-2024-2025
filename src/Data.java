@@ -19,7 +19,7 @@ public class Data extends Component {
                     System.out.println(line);
                     content.append(line);
                 }
-                JTextArea txt = manager.getCurrentTextArea();
+                JTextPane txt = manager.getCurrentTextPane();
                 if(txt != null){
                     txt.setText(content.toString());
                     System.out.println(txt);

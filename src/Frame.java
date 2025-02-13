@@ -1,14 +1,22 @@
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfDocument;
+import com.itextpdf.text.pdf.PdfWriter;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class Frame extends JFrame {
     private String title;
     private JMenuBar menuBar;
     private PanelManager manager;
 
-    public Frame(String title){
+    public Frame(String title) {
         this.title = title;
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         menuBar = new JMenuBar();
@@ -16,11 +24,12 @@ public class Frame extends JFrame {
         JMenuItem exit = new JMenuItem("Exit");
         JMenuItem open = new JMenuItem("Open");
         JMenuItem save = new JMenuItem("Save");
+        JMenuItem exportAsPDF = new JMenuItem("Export file as PDF");
 
         save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String content = manager.getCurrentTextArea().getText();
+                String content = manager.getCurrentTextPane().getText();
                 Data.saveFile(Frame.this, content);
             }
         });
@@ -36,11 +45,17 @@ public class Frame extends JFrame {
                 System.exit(0);
             }
         });
-
+        exportAsPDF.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveAsPDF();
+            }
+        });
 
         menu.add(save);
         menu.add(open);
         menu.add(exit);
+        menu.add(exportAsPDF);
 
         menuBar.add(menu);
         this.setJMenuBar(menuBar);
@@ -49,72 +64,43 @@ public class Frame extends JFrame {
         this.add(manager);
 
         this.setVisible(true);
-
     }
+// PDF saver
+    private void saveAsPDF() {
 
-    private void openFile(ActionEvent e){
-        JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle("Open a file");
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save as PDF");
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("PDF Files", "pdf"));
 
-        int ret = chooser.showOpenDialog(this);
-        if(ret == JFileChooser.APPROVE_OPTION){
-            File selected = chooser.getSelectedFile();
-            try(BufferedReader reader = new BufferedReader(new FileReader(selected))){
-                StringBuilder content = new StringBuilder();
-                String line;
-                while((line = reader.readLine())!= null){
-                    content.append(line);
-                }
-                JTextArea txt = manager.getCurrentTextArea();
-                if(txt != null){
-                    txt.setText(content.toString());
-                }
-            } catch (IOException x){
-                JOptionPane.showMessageDialog(this, "Error opening the file: " + x.getMessage());
+        int userSelection = fileChooser.showSaveDialog(this);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            if (!fileToSave.getName().endsWith(".pdf")) {
+                fileToSave = new File(fileToSave.getAbsolutePath() + ".pdf");
             }
-        }
-    }
-    private void savingTheFile(ActionEvent ok){
-        JFileChooser FileList = new JFileChooser();
-        FileList.setDialogTitle("Save any file");
 
-        int returnTheValue = FileList.showSaveDialog(this);
-        if(returnTheValue == JFileChooser.APPROVE_OPTION){
-            File theSelectedFile = FileList.getSelectedFile();
-            if(theSelectedFile != null){
-                String path = theSelectedFile.getAbsolutePath();
+            Document document = new Document();
+            try (FileOutputStream fos = new FileOutputStream(fileToSave)) {
+                PdfWriter.getInstance(document, fos);
+                document.open();
 
-                // Now check if the file exists
-                if(theSelectedFile.exists()){
-                    int reply = JOptionPane.showConfirmDialog(this,
-                            "You already have a file named like this, would you like to replace it?",
-                            "Yes", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-                    if(reply != JOptionPane.YES_OPTION){
-                        return; // User chose no
-                    }
-                }
 
-                try(BufferedWriter typewriter = new BufferedWriter(new FileWriter(theSelectedFile))){
-                    JTextArea txt = manager.getCurrentTextArea();
-                    String words = txt.getText();
-                    typewriter.write(words);
-                    JOptionPane.showMessageDialog(this, "The file was saved!" + path);
-                } catch (IOException e){
-                    JOptionPane.showMessageDialog(this, "Error with saving this file" + e.getMessage());
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "No file has been selected, please select a file");
+                String content = manager.getCurrentTextPane().getText();// Add content to the PDF
+
+                document.close();
+                JOptionPane.showMessageDialog(this, "PDF saved successfully: " + fileToSave.getAbsolutePath());
+            } catch (DocumentException | IOException ex) {
+                JOptionPane.showMessageDialog(this, "Error saving PDF: " + ex.getMessage());
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Save was cancelled");
         }
     }
 
     @Override
-    public String getTitle(){
+    public String getTitle() {
         return title;
     }
-    public void setTitle(String title){
+
+    public void setTitle(String title) {
         this.title = title;
     }
 }
