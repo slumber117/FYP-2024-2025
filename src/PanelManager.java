@@ -238,6 +238,7 @@ public class PanelManager extends JPanel {
                 current.setForeground(colour);
             }
         }
+        vocab.setForeground(colour);
     }
     private void makeSelectedTextBold() {
         JTextPane currentTextPane = getCurrentTextPane();
