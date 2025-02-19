@@ -86,6 +86,12 @@ public class Frame extends JFrame {
 
 
                 String content = manager.getCurrentTextPane().getText();
+                if(!content.isBlank()){
+                    document.add(new Paragraph(content));
+                } else {
+                    JOptionPane.showMessageDialog(this, "No content to save");
+                    return;
+                }
 
                 document.close();
                 JOptionPane.showMessageDialog(this, "PDF saved successfully: " + fileToSave.getAbsolutePath());
