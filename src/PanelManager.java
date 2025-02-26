@@ -10,11 +10,11 @@ public class PanelManager extends JPanel {
     private JTabbedPane tab;
     private JButton addTab;
     private JButton prev, next;
-    private ButtonSettings redBtn, blueBtn, greenBtn, yellowBtn;
-    private JPanel ColourPnl, VocabularyPnl;
-    private JTextPane txtArea, vocab;
-    private JComboBox<Integer> fontSize;
-    private JComboBox<String> fontFam;
+    private ButtonSettings redBtn, blueBtn, greenBtn, yellowBtn, blackBtn, pinkBtn;
+    private  JPanel ColourPnl, VocabularyPnl;
+    private  JTextPane txtArea, vocab;
+    private final JComboBox<Integer> fontSize;
+    private final JComboBox<String> fontFam;
 
     public PanelManager(String title) {
         this.title = title;
@@ -53,23 +53,29 @@ public class PanelManager extends JPanel {
         ColourPnl.setBackground(new Color(255, 255, 192));
 
         // colour for the colour buttons.
-        redBtn = new ButtonSettings("Red", 15, Color.RED, Color.LIGHT_GRAY, 2);
-        blueBtn = new ButtonSettings("Blue", 15, Color.BLUE, Color.LIGHT_GRAY, 2);
-        greenBtn = new ButtonSettings("Green", 15, Color.GREEN, Color.LIGHT_GRAY, 2);
-        yellowBtn = new ButtonSettings("Yellow", 15, new Color(220, 200, 0), Color.LIGHT_GRAY, 2); // Light yellow
+        redBtn = new ButtonSettings("Red", 50, Color.RED, Color.DARK_GRAY, 1);
+        blueBtn = new ButtonSettings("Blue", 50, Color.BLUE, Color.DARK_GRAY, 1);
+        greenBtn = new ButtonSettings("Green", 50, Color.GREEN, Color.DARK_GRAY, 1);
+        yellowBtn = new ButtonSettings("Yellow", 50, new Color(220, 200, 0), Color.DARK_GRAY, 1);
+        blackBtn = new ButtonSettings("Black", 50, Color.BLACK, Color.DARK_GRAY, 1);
+        pinkBtn = new ButtonSettings("Pink", 50, Color.PINK, Color.DARK_GRAY, 1);
 
-        // Button size settings with implemention below it.
+        // Button size settings with implementation below it.
         Dimension btnSize = new Dimension(150, 25);
         redBtn.setPreferredSize(btnSize);
         greenBtn.setPreferredSize(btnSize);
         blueBtn.setPreferredSize(btnSize);
         yellowBtn.setPreferredSize(btnSize);
+        blackBtn.setPreferredSize(btnSize);
+        pinkBtn.setPreferredSize(btnSize);
 
 
         ColourPnl.add(redBtn);
         ColourPnl.add(blueBtn);
         ColourPnl.add(greenBtn);
         ColourPnl.add(yellowBtn);
+        ColourPnl.add(blackBtn);
+        ColourPnl.add(pinkBtn);
 
         // Vocabulary Panel settings.
         VocabularyPnl = new JPanel(new BorderLayout());
@@ -171,6 +177,7 @@ public class PanelManager extends JPanel {
         navPanel.add(prev);
         navPanel.add(addTab);
         navPanel.add(next);
+        navPanel.setBackground(new Color(255, 255, 192));
 
         // Add the navigation panel to the bottom of the main panel
         this.add(navPanel, BorderLayout.SOUTH);
@@ -180,7 +187,8 @@ public class PanelManager extends JPanel {
         blueBtn.addActionListener(e -> changeTextColour(Color.BLUE));
         greenBtn.addActionListener(e -> changeTextColour(Color.GREEN));
         yellowBtn.addActionListener(e -> changeTextColour(new Color(220, 200, 0)));
-
+        blackBtn.addActionListener(e -> changeTextColour(Color.BLACK));
+        pinkBtn.addActionListener(e -> changeTextColour(Color.pink));
 
         setupColours();
         setup_Add();
@@ -209,6 +217,12 @@ public class PanelManager extends JPanel {
 
         yellowBtn.setBackground(new Color(220, 200, 0));
         yellowBtn.setForeground(Color.WHITE);
+
+        blackBtn.setBackground(new Color(0,0,0));
+        blackBtn.setForeground(Color.WHITE);
+
+        pinkBtn.setBackground(new Color(255, 192, 203));
+        pinkBtn.setForeground(Color.WHITE);
     }
 
 
