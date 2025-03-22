@@ -26,31 +26,13 @@ public class Frame extends JFrame {
         JMenuItem save = new JMenuItem("Save");
         JMenuItem exportAsPDF = new JMenuItem("Export file as PDF");
 
-        save.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String content = manager.getCurrentTextPane().getText();
-                Data.saveFile(Frame.this, content);
-            }
+        save.addActionListener(e -> {
+            String content = manager.getCurrentTextPane().getText();
+            Data.saveFile(Frame.this, content);
         });
-        open.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Data.openFile(Frame.this, manager);
-            }
-        });
-        exit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
-        exportAsPDF.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                saveAsPDF();
-            }
-        });
+        open.addActionListener(e -> Data.openFile(Frame.this, manager));
+        exit.addActionListener(e -> System.exit(0));
+        exportAsPDF.addActionListener(e -> saveAsPDF());
 
         menu.add(save);
         menu.add(open);

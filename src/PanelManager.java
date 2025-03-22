@@ -10,7 +10,7 @@ public class PanelManager extends JPanel {
     private JTabbedPane tab;
     private JButton addTab;
     private JButton prev, next;
-    private ButtonSettings redBtn, blueBtn, greenBtn, yellowBtn, blackBtn, pinkBtn;
+    private ButtonSettings redBtn, blueBtn, greenBtn, blackBtn, pinkBtn;
     private  JPanel ColourPnl, VocabularyPnl;
     private  JTextPane txtArea, vocab;
     private final JComboBox<Integer> fontSize;
@@ -56,7 +56,6 @@ public class PanelManager extends JPanel {
         redBtn = new ButtonSettings("Red", 50, Color.RED, Color.DARK_GRAY, 1);
         blueBtn = new ButtonSettings("Blue", 50, Color.BLUE, Color.DARK_GRAY, 1);
         greenBtn = new ButtonSettings("Green", 50, Color.GREEN, Color.DARK_GRAY, 1);
-        yellowBtn = new ButtonSettings("Yellow", 50, new Color(220, 200, 0), Color.DARK_GRAY, 1);
         blackBtn = new ButtonSettings("Black", 50, Color.BLACK, Color.DARK_GRAY, 1);
         pinkBtn = new ButtonSettings("Pink", 50, Color.PINK, Color.DARK_GRAY, 1);
 
@@ -65,7 +64,6 @@ public class PanelManager extends JPanel {
         redBtn.setPreferredSize(btnSize);
         greenBtn.setPreferredSize(btnSize);
         blueBtn.setPreferredSize(btnSize);
-        yellowBtn.setPreferredSize(btnSize);
         blackBtn.setPreferredSize(btnSize);
         pinkBtn.setPreferredSize(btnSize);
 
@@ -73,7 +71,6 @@ public class PanelManager extends JPanel {
         ColourPnl.add(redBtn);
         ColourPnl.add(blueBtn);
         ColourPnl.add(greenBtn);
-        ColourPnl.add(yellowBtn);
         ColourPnl.add(blackBtn);
         ColourPnl.add(pinkBtn);
 
@@ -147,7 +144,7 @@ public class PanelManager extends JPanel {
         // Tabbed pane settings.
         tab = new JTabbedPane(JTabbedPane.TOP);
         JScrollPane scroll = new JScrollPane(txtArea);
-        tab.addTab("Page 1", scroll);
+        tab.addTab("Page: 1", scroll);
         tab.setBackground(new Color(255, 255, 192));
         this.add(tab, BorderLayout.CENTER);
 
@@ -182,11 +179,10 @@ public class PanelManager extends JPanel {
         // Add the navigation panel to the bottom of the main panel
         this.add(navPanel, BorderLayout.SOUTH);
 
-        // Colour button method calls so, yellow had to be manually configured so to speak in RGB format for more customisability regarding research.
+        // Colour button method calls so to speak in RGB format for more customisability regarding research.
         redBtn.addActionListener(e -> changeTextColour(Color.RED));
         blueBtn.addActionListener(e -> changeTextColour(Color.BLUE));
         greenBtn.addActionListener(e -> changeTextColour(Color.GREEN));
-        yellowBtn.addActionListener(e -> changeTextColour(new Color(220, 200, 0)));
         blackBtn.addActionListener(e -> changeTextColour(Color.BLACK));
         pinkBtn.addActionListener(e -> changeTextColour(Color.pink));
 
@@ -215,9 +211,6 @@ public class PanelManager extends JPanel {
         blueBtn.setBackground(new Color(0, 0, 255));
         blueBtn.setForeground(Color.WHITE);
 
-        yellowBtn.setBackground(new Color(220, 200, 0));
-        yellowBtn.setForeground(Color.WHITE);
-
         blackBtn.setBackground(new Color(0,0,0));
         blackBtn.setForeground(Color.WHITE);
 
@@ -230,7 +223,7 @@ public class PanelManager extends JPanel {
         JTextPane currentTextPane = getCurrentTextPane();
         if (currentTextPane != null) {
             if (tog.isSelected()) {
-                currentTextPane.setBackground(new Color(73, 129, 253));
+                currentTextPane.setBackground(new Color(174, 198,  207));
             } else {
                 currentTextPane.setBackground(new Color(255, 255, 192));
             }
@@ -254,7 +247,7 @@ public class PanelManager extends JPanel {
         }
         vocab.setForeground(colour);
     }
-    private void makeSelectedTextBold() {
+    void makeSelectedTextBold() {
         JTextPane currentTextPane = getCurrentTextPane();
         if (currentTextPane != null) {
             StyledDocument doc = currentTextPane.getStyledDocument();
@@ -295,7 +288,7 @@ public class PanelManager extends JPanel {
         return null;
     }
 
-    private void setup_Add() {
+    void setup_Add() {
         addTab.addActionListener(e -> {
             Integer selectedSize = (Integer) fontSize.getSelectedItem();
             JTextPane txt = new JTextPane();
@@ -308,4 +301,5 @@ public class PanelManager extends JPanel {
             tab.addTab("Page: " + (tab.getTabCount() + 1), scroller);
         });
     }
+
 }
